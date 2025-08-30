@@ -152,6 +152,45 @@ function validateKingMove(piece, from, to) {
   return false;
 }
 
+function validateRookMove(piece, from, to) {
+  const [fromRow, fromCol] = from;
+  const [toRow, toCol] = to;
+  const target = board[toRow][toCol];
+
+  // Must move in straight line
+  if (fromRow !== toRow && fromCol !== toCol) {
+    return false;
+  }
+
+  // Check for any blocking pieces along the path
+  // Determine direction of movement
+  const rowStep = Math.sign(toRow - fromRow);
+  const colStep = Math.sign(toCol - fromCol);
+
+  let r = fromRow + rowStep;
+  let c = fromCol + colStep;
+
+  // Loop through path until destination
+  while (r !== toRow || c !== toCol) {
+    if (board[r][c]) return false; // Path blocked
+    r += rowStep;
+    c += colStep;
+  }
+
+  // Ensure destination is empty
+  if (!target) return true;
+
+  // Capture if destination piece is an opponent
+  if (
+    (piece === piece.toUpperCase() && target === target.toLowerCase()) ||
+    (piece === piece.toLowerCase() && target === target.toUpperCase())
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function isValidMove(piece, from, to) {
   const pieceType = piece.toLowerCase();
 
@@ -162,6 +201,8 @@ function isValidMove(piece, from, to) {
       return validateKnightMove(piece, from, to);
     case "k":
       return validateKingMove(piece, from, to);
+    case "r":
+      return validateRookMove(piece, from, to);
     default:
       return false;
   }
