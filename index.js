@@ -259,6 +259,32 @@ function isValidMove(piece, from, to) {
   }
 }
 
+function checkWinCondition() {
+  let hasWhiteKing = false;
+  let hasBlackKing = false;
+
+  // Traverse board, ensure both kings exist
+  for (let row = 0; row < width; row++) {
+    for (let col = 0; col < width; col++) {
+      if (board[row][col] === "k") hasWhiteKing = true;
+      if (board[row][col] === "K") hasBlackKing = true;
+    }
+  }
+
+  // End the game
+  if (!hasWhiteKing) {
+    console.log("Black wins! The White King has been captured.");
+
+    process.exit(0);
+  }
+
+  if (!hasBlackKing) {
+    console.log("White wins! The Black King has been captured.");
+
+    process.exit(0);
+  }
+}
+
 // Move piece
 function movePiece(from, to) {
   const [fromRow, fromCol] = parsePosition(from);
@@ -272,10 +298,11 @@ function movePiece(from, to) {
     return false;
   }
 
-  // Update piece position if valid
+  // Update piece position if valid then check win condition
   if (isValidMove(piece, [fromRow, fromCol], [toRow, toCol])) {
     board[toRow][toCol] = piece;
     board[fromRow][fromCol] = "";
+    checkWinCondition();
     return true;
   }
 
@@ -301,8 +328,6 @@ function nextTurn() {
       }
 
       if (movePiece(from, to)) {
-        // TODO: add simple check
-
         // Switch turn
         playerTurn = playerTurn === "white" ? "black" : "white";
       }
