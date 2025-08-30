@@ -6,7 +6,7 @@ const rl = readline.createInterface({
 });
 
 const width = 8;
-let playerTurn = "White (lowercase pieces)";
+let playerTurn = "white";
 
 // prettier-ignore
 const startPieces = [
@@ -52,21 +52,59 @@ function printBoard() {
   console.log("   a b c d e f g h\n");
 }
 
+// Convert input into row, col
+function parsePosition(pos) {
+  const col = pos[0].toLowerCase().charCodeAt(0) - 97; // Convert character to zero-based index
+  const row = 8 - parseInt(pos[1]); // invert row index
+  return [row, col];
+}
+
+// Move piece
+function movePiece(from, to) {
+  const [fromRow, fromCol] = parsePosition(from);
+  const [toRow, toCol] = parsePosition(to);
+
+  const piece = board[fromRow][fromCol];
+
+  // Check piece
+  if (!piece) {
+    console.log("No piece at that position.");
+    return false;
+  }
+
+  // Update piece position
+  board[toRow][toCol] = piece;
+  board[fromRow][fromCol] = "";
+  return true;
+}
+
 // Game loop
 function nextTurn() {
   printBoard();
 
-  rl.question(`${playerTurn}'s move (e.g., a2 a3): `, (answer) => {
-    const [from, to] = answer.split(" ");
+  rl.question(
+    `${playerTurn}'s ${
+      playerTurn === "white" ? "(lowercase pieces)" : "(uppercase pieces)"
+    } move (e.g., a2 a3): `,
+    (answer) => {
+      const [from, to] = answer.split(" ");
 
-    // Input format validation
-    if (!from || !to) {
-      console.log("Invalid input. Try again.");
-      return nextTurn();
+      // Input format validation
+      if (!from || !to) {
+        console.log("Invalid input. Try again.");
+        return nextTurn();
+      }
+
+      if (movePiece(from, to)) {
+        // TODO: add simple check
+
+        // Switch turn
+        playerTurn = playerTurn === "white" ? "black" : "white";
+      }
+
+      nextTurn();
     }
-
-    nextTurn();
-  });
+  );
 }
 
 // Start game
