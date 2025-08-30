@@ -59,6 +59,60 @@ function parsePosition(pos) {
   return [row, col];
 }
 
+function validatePawnMove(piece, from, to) {
+  const [fromRow, fromCol] = from;
+  const [toRow, toCol] = to;
+  const target = board[toRow][toCol];
+
+  const direction = piece === "P" ? 1 : -1; // White = p moves up, Black = P moves down
+  const startRow = piece === "P" ? 1 : 6; // White pawns start at row 1, black at row 6
+
+  // 1 step forward
+  if (toCol === fromCol && toRow === fromRow + direction && !target) {
+    return true;
+  }
+
+  // 2 steps forward from starting position
+  if (
+    toCol === fromCol && // same column
+    fromRow === startRow && // starting row
+    toRow === fromRow + 2 * direction && // two steps forward
+    !target // target square empty
+  ) {
+    // ensure no piece in between
+    const middleRow = fromRow + direction;
+    if (!board[middleRow][toCol]) return true;
+  }
+
+  // Diagonal capture
+  if (
+    Math.abs(toCol - fromCol) === 1 && // one column diagonal
+    toRow === fromRow + direction && // one row forward
+    target // there is a piece to capture
+  ) {
+    // Ensure capture is opponent piece
+    if (
+      (piece === "P" && target === target.toLowerCase()) ||
+      (piece === "p" && target === target.toUpperCase())
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isValidMove(piece, from, to) {
+  const pieceType = piece.toLowerCase();
+
+  switch (pieceType) {
+    case "p":
+      return validatePawnMove(piece, from, to);
+    default:
+      return false;
+  }
+}
+
 // Move piece
 function movePiece(from, to) {
   const [fromRow, fromCol] = parsePosition(from);
@@ -72,10 +126,15 @@ function movePiece(from, to) {
     return false;
   }
 
-  // Update piece position
-  board[toRow][toCol] = piece;
-  board[fromRow][fromCol] = "";
-  return true;
+  // Update piece position if valid
+  if (isValidMove(piece, [fromRow, fromCol], [toRow, toCol])) {
+    board[toRow][toCol] = piece;
+    board[fromRow][fromCol] = "";
+    return true;
+  }
+
+  console.log("Invalid move.");
+  return false;
 }
 
 // Game loop
