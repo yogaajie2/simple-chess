@@ -114,7 +114,7 @@ function validateKnightMove(piece, from, to) {
     return false;
   }
 
-  // If empty square, valid
+  // Ensure empty square
   if (!target) return true;
 
   // If capturing, must be opponent
@@ -128,6 +128,30 @@ function validateKnightMove(piece, from, to) {
   return false;
 }
 
+function validateKingMove(piece, from, to) {
+  const [fromRow, fromCol] = from;
+  const [toRow, toCol] = to;
+  const target = board[toRow][toCol];
+  const rowDiff = Math.abs(toRow - fromRow);
+  const colDiff = Math.abs(toCol - fromCol);
+
+  // Can only move 1 step in any direction
+  if (rowDiff <= 1 && colDiff <= 1 && !(rowDiff === 0 && colDiff === 0)) {
+    // Ensure empty square
+    if (!target) return true;
+
+    // If capturing, must be opponent
+    if (
+      (piece === piece.toUpperCase() && target === target.toLowerCase()) ||
+      (piece === piece.toLowerCase() && target === target.toUpperCase())
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function isValidMove(piece, from, to) {
   const pieceType = piece.toLowerCase();
 
@@ -136,6 +160,8 @@ function isValidMove(piece, from, to) {
       return validatePawnMove(piece, from, to);
     case "n":
       return validateKnightMove(piece, from, to);
+    case "k":
+      return validateKingMove(piece, from, to);
     default:
       return false;
   }
