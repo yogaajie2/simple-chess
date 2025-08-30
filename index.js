@@ -102,12 +102,40 @@ function validatePawnMove(piece, from, to) {
   return false;
 }
 
+function validateKnightMove(piece, from, to) {
+  const [fromRow, fromCol] = from;
+  const [toRow, toCol] = to;
+  const target = board[toRow][toCol];
+  const rowDiff = Math.abs(toRow - fromRow);
+  const colDiff = Math.abs(toCol - fromCol);
+
+  // Validate L-shape movement
+  if (!((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2))) {
+    return false;
+  }
+
+  // If empty square, valid
+  if (!target) return true;
+
+  // If capturing, must be opponent
+  if (
+    (piece === piece.toUpperCase() && target === target.toLowerCase()) ||
+    (piece === piece.toLowerCase() && target === target.toUpperCase())
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function isValidMove(piece, from, to) {
   const pieceType = piece.toLowerCase();
 
   switch (pieceType) {
     case "p":
       return validatePawnMove(piece, from, to);
+    case "n":
+      return validateKnightMove(piece, from, to);
     default:
       return false;
   }
