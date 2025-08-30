@@ -191,6 +191,46 @@ function validateRookMove(piece, from, to) {
   return false;
 }
 
+// Similar logic to Rook, but only moves diagonally
+function validateBishopMove(piece, from, to) {
+  const [fromRow, fromCol] = from;
+  const [toRow, toCol] = to;
+  const target = board[toRow][toCol];
+
+  // Must move diagonally
+  if (Math.abs(toRow - fromRow) !== Math.abs(toCol - fromCol)) {
+    return false;
+  }
+
+  // Check for any blocking pieces along the path
+  // Determine direction of movement
+  const rowStep = Math.sign(toRow - fromRow);
+  const colStep = Math.sign(toCol - fromCol);
+
+  let r = fromRow + rowStep;
+  let c = fromCol + colStep;
+
+  // Loop through path until destination
+  while (r !== toRow && c !== toCol) {
+    if (board[r][c]) return false; // Path blocked
+    r += rowStep;
+    c += colStep;
+  }
+
+  // Ensure destination is empty
+  if (!target) return true;
+
+  // Capture if destination piece is an opponent
+  if (
+    (piece === piece.toUpperCase() && target === target.toLowerCase()) ||
+    (piece === piece.toLowerCase() && target === target.toUpperCase())
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function isValidMove(piece, from, to) {
   const pieceType = piece.toLowerCase();
 
@@ -203,6 +243,8 @@ function isValidMove(piece, from, to) {
       return validateKingMove(piece, from, to);
     case "r":
       return validateRookMove(piece, from, to);
+    case "b":
+      return validateBishopMove(piece, from, to);
     default:
       return false;
   }
