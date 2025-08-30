@@ -231,6 +231,13 @@ function validateBishopMove(piece, from, to) {
   return false;
 }
 
+// Reuse and combine Rook and Bishop logic
+function validateQueenMove(piece, from, to) {
+  if (validateRookMove(piece, from, to)) return true;
+  if (validateBishopMove(piece, from, to)) return true;
+  return false;
+}
+
 function isValidMove(piece, from, to) {
   const pieceType = piece.toLowerCase();
 
@@ -245,6 +252,8 @@ function isValidMove(piece, from, to) {
       return validateRookMove(piece, from, to);
     case "b":
       return validateBishopMove(piece, from, to);
+    case "q":
+      return validateQueenMove(piece, from, to);
     default:
       return false;
   }
