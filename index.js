@@ -310,6 +310,16 @@ function movePiece(from, to) {
   return false;
 }
 
+function validateCoordinates(coord) {
+  // Only accept two characters
+  if (!coord || coord.length !== 2) return false;
+
+  // Only accepts the letter a-h and numbers 1-8
+  const file = coord[0].toLowerCase();
+  const rank = coord[1];
+  return file >= "a" && file <= "h" && rank >= "1" && rank <= "8";
+}
+
 // Game loop
 function nextTurn() {
   printBoard();
@@ -319,11 +329,22 @@ function nextTurn() {
       playerTurn === "white" ? "(lowercase pieces)" : "(uppercase pieces)"
     } move (e.g., a2 a3): `,
     (answer) => {
-      const [from, to] = answer.split(" ");
+      const parts = answer.trim().split(/\s+/);
+
+      // Only accepts proper coordinates input format
+      if (parts.length !== 2) {
+        console.log("Invalid input format. Use e.g. 'a2 a3'.");
+        return nextTurn();
+      }
+
+      const [from, to] = parts;
 
       // Input format validation
-      if (!from || !to) {
-        console.log("Invalid input. Try again.");
+      if (!validateCoordinates(from) || !validateCoordinates(to)) {
+        console.log(
+          "Invalid coordinates. Use files a-h and ranks 1-8 (e.g., 'a2 a3')."
+        );
+
         return nextTurn();
       }
 
