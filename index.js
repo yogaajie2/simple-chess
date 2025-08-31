@@ -385,4 +385,5 @@ module.exports = {
   width,
   validatePawnMove,
   validateKnightMove,
+  validateKingMove,
 };

@@ -1,10 +1,12 @@
 const { beforeEach, describe, expect, test } = require("@jest/globals");
+
 const {
   createBoard,
   board,
   width,
   validatePawnMove,
   validateKnightMove,
+  validateKingMove,
 } = require("./index");
 
 describe("Board Initialization", () => {
@@ -144,5 +146,47 @@ describe("Knight Movement", () => {
   test("knight cannot capture own piece", () => {
     board[5][2] = "p"; // place white pawn at c3
     expect(validateKnightMove("n", [7, 1], [5, 2])).toBe(false); // b1 -> c3
+  });
+});
+
+describe("King Movement", () => {
+  beforeEach(() => {
+    createBoard();
+  });
+
+  test("king can move one square forward", () => {
+    // White king at e1 -> e2
+    board[7][4] = "k"; // ensure position
+    board[6][4] = ""; // clear square
+    expect(validateKingMove("k", [7, 4], [6, 4])).toBe(true);
+  });
+
+  test("king can move one square diagonally", () => {
+    board[7][4] = "k";
+    board[6][3] = "";
+    expect(validateKingMove("k", [7, 4], [6, 3])).toBe(true);
+  });
+
+  test("king cannot move two squares", () => {
+    board[7][4] = "k";
+    board[5][4] = "";
+    expect(validateKingMove("k", [7, 4], [5, 4])).toBe(false);
+  });
+
+  test("king cannot stay in the same square", () => {
+    board[7][4] = "k";
+    expect(validateKingMove("k", [7, 4], [7, 4])).toBe(false);
+  });
+
+  test("king can capture opponent piece", () => {
+    board[7][4] = "k";
+    board[6][4] = "P"; // black pawn
+    expect(validateKingMove("k", [7, 4], [6, 4])).toBe(true);
+  });
+
+  test("king cannot capture own piece", () => {
+    board[7][4] = "k";
+    board[6][4] = "p"; // white pawn
+    expect(validateKingMove("k", [7, 4], [6, 4])).toBe(false);
   });
 });
