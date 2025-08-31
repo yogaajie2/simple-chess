@@ -72,6 +72,12 @@ describe("Pawn Movement", () => {
     expect(validatePawnMove("p", [6, 0], [5, 1])).toBe(true); // a2 -> b3
   });
 
+  test("white pawn cannot capture own piece", () => {
+    // Place another white pawn at b3 (row 5, col 1)
+    board[5][1] = "p";
+    expect(validatePawnMove("p", [6, 0], [5, 1])).toBe(false); // a2 -> b3
+  });
+
   test("white pawn cannot move diagonally into empty square", () => {
     expect(validatePawnMove("p", [6, 0], [5, 1])).toBe(false); // a2 -> b3
   });
@@ -92,6 +98,16 @@ describe("Pawn Movement", () => {
     // Put white pawn at b6 (row 2, col 1)
     board[2][1] = "p";
     expect(validatePawnMove("P", [1, 0], [2, 1])).toBe(true); // a7 -> b6
+  });
+
+  test("black pawn cannot capture own piece", () => {
+    // Place another black pawn at b6 (row 2, col 1)
+    board[2][1] = "P";
+    expect(validatePawnMove("P", [1, 0], [2, 1])).toBe(false); // a7 -> b6
+  });
+
+  test("black pawn cannot move diagonally into empty square", () => {
+    expect(validatePawnMove("P", [1, 0], [2, 1])).toBe(false); // a7 -> b6
   });
 });
 
