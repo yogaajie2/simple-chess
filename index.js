@@ -259,7 +259,8 @@ function isValidMove(piece, from, to) {
   }
 }
 
-function checkWinCondition() {
+// Separated the winner logic for easier testing
+function getWinner() {
   let hasWhiteKing = false;
   let hasBlackKing = false;
 
@@ -271,14 +272,22 @@ function checkWinCondition() {
     }
   }
 
+  if (!hasWhiteKing) return "black";
+  if (!hasBlackKing) return "white";
+  return null;
+}
+
+function checkWinCondition() {
+  const winner = getWinner();
+
   // End the game
-  if (!hasWhiteKing) {
+  if (winner === "black") {
     console.log("Black wins! The White King has been captured.");
 
     process.exit(0);
   }
 
-  if (!hasBlackKing) {
+  if (winner === "white") {
     console.log("White wins! The Black King has been captured.");
 
     process.exit(0);
