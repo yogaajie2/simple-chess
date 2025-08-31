@@ -9,6 +9,7 @@ const {
   validateKingMove,
   validateRookMove,
   validateBishopMove,
+  validateQueenMove,
 } = require("./index");
 
 // Helper function to clear the board for easier, controlled testing
@@ -274,5 +275,44 @@ describe("Bishop Movement", () => {
   test("bishop cannot capture own piece", () => {
     board[5][4] = "p"; // white pawn at e3
     expect(validateBishopMove("b", [7, 2], [5, 4])).toBe(false);
+  });
+});
+
+describe("Queen Movement", () => {
+  beforeEach(() => {
+    createBoard();
+    clearBoard();
+    board[7][3] = "q"; // place white queen at d1
+  });
+
+  test("queen can move vertically", () => {
+    expect(validateQueenMove("q", [7, 3], [4, 3])).toBe(true); // d1 -> d4
+  });
+
+  test("queen can move horizontally", () => {
+    expect(validateQueenMove("q", [7, 3], [7, 6])).toBe(true); // d1 -> g1
+  });
+
+  test("queen can move diagonally", () => {
+    expect(validateQueenMove("q", [7, 3], [4, 6])).toBe(true); // d1 -> g4
+  });
+
+  test("queen cannot move like a knight", () => {
+    expect(validateQueenMove("q", [7, 3], [5, 4])).toBe(false); // d1 -> e3
+  });
+
+  test("queen cannot move if path is blocked", () => {
+    board[6][3] = "p"; // white pawn at d2
+    expect(validateQueenMove("q", [7, 3], [4, 3])).toBe(false); // d1 -> d4
+  });
+
+  test("queen can capture opponent piece", () => {
+    board[4][3] = "P"; // black pawn at d4
+    expect(validateQueenMove("q", [7, 3], [4, 3])).toBe(true); // d1 -> d4
+  });
+
+  test("queen cannot capture own piece", () => {
+    board[4][3] = "p"; // white pawn at d4
+    expect(validateQueenMove("q", [7, 3], [4, 3])).toBe(false);
   });
 });
