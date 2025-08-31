@@ -7,6 +7,7 @@ const {
   validatePawnMove,
   validateKnightMove,
   validateKingMove,
+  validateRookMove,
 } = require("./index");
 
 describe("Board Initialization", () => {
@@ -188,5 +189,49 @@ describe("King Movement", () => {
     board[7][4] = "k";
     board[6][4] = "p"; // white pawn
     expect(validateKingMove("k", [7, 4], [6, 4])).toBe(false);
+  });
+});
+
+describe("Rook Movement", () => {
+  beforeEach(() => {
+    createBoard();
+
+    // Clear the board for easier, controlled testing
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        board[r][c] = "";
+      }
+    }
+
+    // Place a white rook at a1
+    board[7][0] = "r";
+  });
+
+  test("rook can move vertically forward", () => {
+    expect(validateRookMove("r", [7, 0], [5, 0])).toBe(true); // a1 -> a3
+  });
+
+  test("rook can move horizontally right", () => {
+    console.log(board);
+    expect(validateRookMove("r", [7, 0], [7, 5])).toBe(true); // a1 -> f1
+  });
+
+  test("rook cannot move diagonally", () => {
+    expect(validateRookMove("r", [7, 0], [5, 2])).toBe(false); // a1 -> c3
+  });
+
+  test("rook is blocked by piece in path", () => {
+    board[6][0] = "p"; // put pawn back at a2
+    expect(validateRookMove("r", [7, 0], [5, 0])).toBe(false); // blocked
+  });
+
+  test("rook can capture opponent piece", () => {
+    board[5][0] = "P"; // black pawn at a3
+    expect(validateRookMove("r", [7, 0], [5, 0])).toBe(true); // capture
+  });
+
+  test("rook cannot capture own piece", () => {
+    board[5][0] = "p"; // white pawn at a3
+    expect(validateRookMove("r", [7, 0], [5, 0])).toBe(false);
   });
 });

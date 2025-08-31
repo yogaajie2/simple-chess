@@ -386,4 +386,5 @@ module.exports = {
   validatePawnMove,
   validateKnightMove,
   validateKingMove,
+  validateRookMove,
 };
