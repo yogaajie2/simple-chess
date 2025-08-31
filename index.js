@@ -384,4 +384,5 @@ module.exports = {
   board,
   width,
   validatePawnMove,
+  validateKnightMove,
 };

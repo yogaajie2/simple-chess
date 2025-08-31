@@ -1,5 +1,11 @@
 const { beforeEach, describe, expect, test } = require("@jest/globals");
-const { createBoard, board, width, validatePawnMove } = require("./index");
+const {
+  createBoard,
+  board,
+  width,
+  validatePawnMove,
+  validateKnightMove,
+} = require("./index");
 
 describe("Board Initialization", () => {
   beforeEach(() => {
@@ -86,5 +92,41 @@ describe("Pawn Movement", () => {
     // Put white pawn at b6 (row 2, col 1)
     board[2][1] = "p";
     expect(validatePawnMove("P", [1, 0], [2, 1])).toBe(true); // a7 -> b6
+  });
+});
+
+describe("Knight Movement", () => {
+  beforeEach(() => {
+    createBoard();
+  });
+
+  test("knight can move in L-shape (2 up 1 right)", () => {
+    expect(validateKnightMove("n", [7, 1], [5, 2])).toBe(true); // b1 -> c3
+  });
+
+  test("knight can move in L-shape (2 up 1 left)", () => {
+    expect(validateKnightMove("n", [7, 1], [5, 0])).toBe(true); // b1 -> a3
+  });
+
+  test("knight can move in L-shape (2 right 1 up)", () => {
+    expect(validateKnightMove("N", [0, 1], [2, 2])).toBe(true); // b8 -> c6
+  });
+
+  test("knight cannot move straight", () => {
+    expect(validateKnightMove("n", [7, 1], [6, 1])).toBe(false); // b1 -> b2
+  });
+
+  test("knight cannot move diagonal", () => {
+    expect(validateKnightMove("n", [7, 1], [6, 2])).toBe(false); // b1 -> c2
+  });
+
+  test("knight can capture opponent piece", () => {
+    board[5][2] = "P"; // place black pawn at c3
+    expect(validateKnightMove("n", [7, 1], [5, 2])).toBe(true); // b1 -> c3
+  });
+
+  test("knight cannot capture own piece", () => {
+    board[5][2] = "p"; // place white pawn at c3
+    expect(validateKnightMove("n", [7, 1], [5, 2])).toBe(false); // b1 -> c3
   });
 });
