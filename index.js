@@ -378,3 +378,9 @@ function nextTurn() {
 // Start game
 createBoard();
 nextTurn();
+
+module.exports = {
+  createBoard,
+  board,
+  width,
+};
