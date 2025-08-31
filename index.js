@@ -281,16 +281,21 @@ function checkWinCondition() {
   const winner = getWinner();
 
   // End the game
-  if (winner === "black") {
-    console.log("Black wins! The White King has been captured.");
+  if (winner) {
+    console.log("\nFinal Board Result:");
+    printBoard();
 
-    process.exit(0);
-  }
+    if (winner === "black") {
+      console.log("Black wins! The White King has been captured.");
 
-  if (winner === "white") {
-    console.log("White wins! The Black King has been captured.");
+      process.exit(0);
+    }
 
-    process.exit(0);
+    if (winner === "white") {
+      console.log("White wins! The Black King has been captured.");
+
+      process.exit(0);
+    }
   }
 }
 
