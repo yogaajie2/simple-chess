@@ -10,6 +10,15 @@ const {
   validateRookMove,
 } = require("./index");
 
+// Helper function to clear the board for easier, controlled testing
+function clearBoard() {
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      board[r][c] = "";
+    }
+  }
+}
+
 describe("Board Initialization", () => {
   beforeEach(() => {
     createBoard(); // reset board before each test
@@ -195,13 +204,7 @@ describe("King Movement", () => {
 describe("Rook Movement", () => {
   beforeEach(() => {
     createBoard();
-
-    // Clear the board for easier, controlled testing
-    for (let r = 0; r < 8; r++) {
-      for (let c = 0; c < 8; c++) {
-        board[r][c] = "";
-      }
-    }
+    clearBoard();
 
     // Place a white rook at a1
     board[7][0] = "r";
