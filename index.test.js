@@ -10,6 +10,7 @@ const {
   validateRookMove,
   validateBishopMove,
   validateQueenMove,
+  getWinner,
 } = require("./index");
 
 // Helper function to clear the board for easier, controlled testing
@@ -314,5 +315,29 @@ describe("Queen Movement", () => {
   test("queen cannot capture own piece", () => {
     board[4][3] = "p"; // white pawn at d4
     expect(validateQueenMove("q", [7, 3], [4, 3])).toBe(false);
+  });
+});
+
+describe("Win Condition", () => {
+  beforeEach(() => {
+    createBoard();
+
+    // Place both kings
+    board[7][3] = "k"; // white king at e1
+    board[0][4] = "K"; // black king at e8
+  });
+
+  test("returns null when both kings present", () => {
+    expect(getWinner()).toBe(null);
+  });
+
+  test("returns 'white' if black king missing", () => {
+    board[0][4] = ""; // remove black king
+    expect(getWinner()).toBe("white");
+  });
+
+  test("returns 'black' if white king missing", () => {
+    board[7][3] = ""; // remove white king
+    expect(getWinner()).toBe("black");
   });
 });

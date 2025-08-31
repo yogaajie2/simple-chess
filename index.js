@@ -398,4 +398,5 @@ module.exports = {
   validateRookMove,
   validateBishopMove,
   validateQueenMove,
+  getWinner,
 };
