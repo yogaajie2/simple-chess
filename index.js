@@ -285,6 +285,12 @@ function checkWinCondition() {
   }
 }
 
+function isCorrectPiece(piece, player) {
+  if (player === "black" && piece === piece.toUpperCase()) return true;
+  if (player === "white" && piece === piece.toLowerCase()) return true;
+  return false;
+}
+
 // Move piece
 function movePiece(from, to) {
   const [fromRow, fromCol] = parsePosition(from);
@@ -295,6 +301,17 @@ function movePiece(from, to) {
   // Check piece
   if (!piece) {
     console.log("No piece at that position.");
+    return false;
+  }
+
+  // Piece ownership validation
+  if (!isCorrectPiece(piece, playerTurn)) {
+    console.log(
+      `Wrong piece selected. It's ${playerTurn}'s ${
+        playerTurn === "white" ? "(lowercase pieces)" : "(uppercase pieces)"
+      } turn.`
+    );
+
     return false;
   }
 
